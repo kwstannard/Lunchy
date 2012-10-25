@@ -1,6 +1,2 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  name: MyString
-  times_gone: 1
-  last_went: 2012-10-14

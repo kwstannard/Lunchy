@@ -1,4 +1,4 @@
-class RandomSpotPicker
+class SpotPicker
   def self.pick(spots)
     value_buckets = Hash.new
     highest_value = -Float::INFINITY
@@ -11,6 +11,7 @@ class RandomSpotPicker
   end
 
   def self.val(spot)
-    Math.log(1 + Time.now.to_i - spot.last_went.to_i, 2).to_int
+    val = Math.log(1 + Time.now.to_i - spot.last_went.to_i, 2).to_int
+    val + spot.fans.count * 16
   end
 end

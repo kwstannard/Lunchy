@@ -2,15 +2,16 @@ Lunchy::Application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
-  post 'add' => 'api#add'
-  post 'edit' => 'api#edit'
-  post 'remove' => 'api#remove'
+  post 'add_spot' => 'api#add_spot'
+  post 'edit_spot' => 'api#edit_spot'
+  post 'remove_spot' => 'api#remove_spot'
 
   match 'list_spots' => 'api#list_spots'
   match 'pick_spot' => 'api#pick_spot'
 
-  post 'filter' => 'api#filter'
-  match 'list_filters' => 'api#list_filters'
+  post 'add_user' => 'api#add_user'
+  post 'edit_user' => 'api#edit_user'
+  post 'remove_user' => 'api#remove_user'
 
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'

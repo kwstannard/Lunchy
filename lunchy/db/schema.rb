@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(:version => 20121021010003) do
 
   create_table "spots", :force => true do |t|
     t.string   "name"
-    t.time     "last_went",  :default => '2000-01-01 00:24:11'
+    t.datetime "last_went",  :default => '2012-10-25 04:35:26'
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
   end
