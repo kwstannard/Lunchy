@@ -96,7 +96,6 @@ module.exports = (robot) ->
     user_names = ""
     for own key, user of robot.users()
       user_names += "#{user.name},"
-    console.log user_names
     robot
       .http("http://localhost:3000/pick_spot")
       .query
