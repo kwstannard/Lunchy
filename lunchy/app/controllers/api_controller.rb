@@ -6,7 +6,7 @@ class ApiController < ApplicationController
   end
 
   def edit_spot
-    Spot.where(name: params['name_old']).first.update_attributes!(
+    Spot.where(name: params['name_old']).first!.update_attributes!(
       name: params['name_new']
     )
   end
@@ -29,7 +29,7 @@ class ApiController < ApplicationController
   def set_favorite
     User.create name: params['user_name']
     user = User.where(name: params['user_name']).first
-    spot = Spot.where(name: params['spot_name']).first
+    spot = Spot.where(name: params['spot_name']).first!
     user.update_attributes! favorite_spot: spot
     render json: nil, status: 200
   end

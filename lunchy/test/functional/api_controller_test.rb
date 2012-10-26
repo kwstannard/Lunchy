@@ -48,7 +48,7 @@ class ApiControllerTest < ActionController::TestCase
     assert_equal spots.to_json, @response.body
   end
 
-  test "#pick_spot" do
+  test "#pick_spot successful" do
     spot = Spot.create name: 'double', last_went: Time.now
     2.times {|i| User.create name: "user#{i}", favorite_spot: spot }
     user_names = User.pluck :name
@@ -62,5 +62,10 @@ class ApiControllerTest < ActionController::TestCase
     assert_difference 'Spot.first.fans.count', 1 do
       post :set_favorite, spot_name: spot_name, user_name: user_name
     end
+  end
+
+  test "#set_favorite no spot found" do
+    post :set_favorite, spot_name: 'fake_name', user_name: 'double'
+    assert_equal 409, @response.status
   end
 end
