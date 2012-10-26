@@ -2,9 +2,10 @@ require File.expand_path '../../../app/models/spot_picker', __FILE__
 describe SpotPicker do
   let (:picker) { SpotPicker }
   describe "#pick" do
-    let (:spot1) { double('1', name: double, last_went: Time.now, fans: []) }
-    let (:spot2) { double('2', name: double, last_went: Time.now, fans: []) }
+    let (:spot1) { double('1', last_went: Time.now) }
+    let (:spot2) { double('2', last_went: Time.now) }
     let (:spots) { [spot1, spot2] }
+    let (:users) { [double(favorite_spot: nil)] }
 
     context "equal spots" do
       it "can pick randomly between two spots" do
@@ -15,31 +16,30 @@ describe SpotPicker do
 
     context "spot2 has been gone to more recently than spot1" do
       it "picks spot1" do
-        spot1.stub! last_went: (Time.now - 50000)
-        picker.pick(spots).should be spot1
+        spot1.stub! last_went: (Time.now - 86400)
+        picker.pick(spots, users).should be spot1
       end
     end
 
     context "spot 2 is a favorite of a user" do
-      it " picks spot2" do
-        spot2.stub! fans: [double]
-        picker.pick(spots).should be spot2
+      let (:users) { [double( favorite_spot: spot2)] }
+      it "picks spot2" do
+        picker.pick(spots, users).should be spot2
       end
-    end
 
-    context "spot 2 has a fan and spot one hasn't been visited in a day" do
-      it "picks spot 2" do
-        spot1.stub! last_went: (Time.now - 86400)
-        spot2.stub! fans: [double]
-        picker.pick(spots).should be spot2
+      context "spot one hasn't been visited in a day" do
+        it "picks spot 1" do
+          spot1.stub! last_went: (Time.now - 86400)
+          picker.pick(spots, users).should be spot1
+        end
       end
-    end
 
-    context "spot 2 has a fan and spot one hasn't been visited in 2 days" do
-      it "picks spot 1" do
-        spot1.stub! last_went: (Time.now - 172800)
-        spot2.stub! fans: [double]
-        picker.pick(spots).should be spot1
+      context "spot one hasn't been visited in 2 days and spot 2 in one day" do
+        it "picks spot 2" do
+          spot2.stub! last_went: (Time.now - 86400)
+          spot1.stub! last_went: (Time.now - 172800)
+          picker.pick(spots, users).should be spot2
+        end
       end
     end
   end
@@ -52,7 +52,7 @@ describe SpotPicker do
   def delta_per_rep(objects, reps)
     results = Hash.new(0)
     reps.times do
-      results[picker.pick(objects)] += 1
+      results[picker.pick(objects, users)] += 1
     end
     (results[objects.first] - results[objects.last]).to_f / reps
   end

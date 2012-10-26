@@ -16,7 +16,8 @@ class ApiController < ApplicationController
   end
 
   def pick_spot
-    spot = SpotPicker.pick(Spot.all)
+    users = User.where(name: params['user_names'].split(","))
+    spot = SpotPicker.pick(Spot.all, users)
     spot.update_attributes! last_went: Time.now
     render json: spot
   end
@@ -25,9 +26,12 @@ class ApiController < ApplicationController
     render json: Spot.all
   end
 
-  def add_user
-    User.create! name: params['name']
-    render json: nil, status: 201
+  def set_favorite
+    User.create name: params['user_name']
+    user = User.where(name: params['user_name']).first
+    spot = Spot.where(name: params['spot_name']).first
+    user.update_attributes! favorite_spot: spot
+    render json: nil, status: 200
   end
 
   rescue_from ActiveRecord::ActiveRecordError do |ex|

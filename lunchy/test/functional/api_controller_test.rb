@@ -3,7 +3,7 @@ require 'test_helper'
 class ApiControllerTest < ActionController::TestCase
 
   def setup
-    post :add_spot, name: 'dlferp'
+    Spot.create name: 'dlferp', last_went: Time.now - 86400
   end
 
   test "#add_spot success" do
@@ -49,31 +49,18 @@ class ApiControllerTest < ActionController::TestCase
   end
 
   test "#pick_spot" do
-    get :pick_spot
-    assert_equal @response.body, Spot.first.to_json
+    spot = Spot.create name: 'double', last_went: Time.now
+    2.times {|i| User.create name: "user#{i}", favorite_spot: spot }
+    user_names = User.pluck :name
+    get :pick_spot, user_names: user_names
+    assert_equal @response.body, Spot.where(name: 'double').first.to_json
   end
 
-  test "#add_user" do
-    name = "derps"
-    assert_difference 'User.count' do
-      post :add_user, name: name
+  test "#set_favorite" do
+    spot_name = Spot.first.name
+    user_name = User.first.name
+    assert_difference 'Spot.first.fans.count', 1 do
+      post :set_favorite, spot_name: spot_name, user_name: user_name
     end
-    assert_equal name, User.last.name
-    assert_equal 201, @response.status
   end
-
-  test "#add_user empty name" do
-    assert_difference 'User.count', 0 do
-      post :add_user, name: ''
-    end
-    assert_equal 409, @response.status
-  end
-
-  test "#add_user duplicate name" do
-    assert_difference 'User.count', 0 do
-      post :add_user, name: User.last.name
-    end
-    assert_equal 409, @response.status
-  end
-
 end

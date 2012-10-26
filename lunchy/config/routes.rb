@@ -10,9 +10,8 @@ Lunchy::Application.routes.draw do
   match 'pick_spot' => 'api#pick_spot'
 
   post 'add_user' => 'api#add_user'
-  post 'edit_user' => 'api#edit_user'
-  post 'remove_user' => 'api#remove_user'
 
+  post 'set_favorite' => 'api#set_favorite'
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
