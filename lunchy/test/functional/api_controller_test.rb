@@ -7,7 +7,7 @@ class ApiControllerTest < ActionController::TestCase
   end
 
   test "#add_spot success" do
-    name = 'herp'
+    name = 'Herp'
     assert_difference 'Spot.count' do
       post :add_spot, name: name
     end
@@ -37,7 +37,7 @@ class ApiControllerTest < ActionController::TestCase
 
   test "#edit_spot" do
     name = Spot.first.name
-    name_new = 'herp'
+    name_new = 'Herp'
     post :edit_spot, name_old: name, name_new: name_new
     assert_equal name_new, Spot.first.name
   end
@@ -49,11 +49,11 @@ class ApiControllerTest < ActionController::TestCase
   end
 
   test "#pick_spot successful" do
-    spot = Spot.create name: 'double', last_went: Time.now
+    spot = Spot.create name: 'Double', last_went: Time.now
     2.times {|i| User.create name: "user#{i}", favorite_spot: spot }
     user_names = User.pluck :name
     get :pick_spot, user_names: user_names
-    assert_equal @response.body, Spot.where(name: 'double').first.to_json
+    assert_equal @response.body, Spot.where(name: 'Double').first.to_json
   end
 
   test "#set_favorite" do

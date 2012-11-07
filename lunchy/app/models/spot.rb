@@ -6,6 +6,14 @@ class Spot < ActiveRecord::Base
 
   has_many :fans, class_name: "User", foreign_key: :favorite_spot_id
 
+  def name=(name)
+    write_attribute(:name, name.gsub(/(\S*)/) {|s| s.capitalize})
+  end
+
+  def find_spot(name)
+
+  end
+
   def as_json(overrides={})
     options = {
       only: [:name, :last_went]
