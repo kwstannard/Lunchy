@@ -7,11 +7,11 @@ class Spot < ActiveRecord::Base
   has_many :fans, class_name: "User", foreign_key: :favorite_spot_id
 
   def name=(name)
-    write_attribute(:name, name.gsub(/(\S*)/) {|s| s.capitalize})
+    write_attribute :name, NameNormalizer.run(name)
   end
 
-  def find_spot(name)
-
+  def self.find_spot(name)
+    first conditions: {name: NameNormalizer.run(name)}
   end
 
   def as_json(overrides={})
@@ -20,4 +20,5 @@ class Spot < ActiveRecord::Base
     }.merge overrides
     super(options)
   end
+
 end

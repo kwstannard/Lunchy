@@ -7,4 +7,11 @@ class SpotTest < ActiveSupport::TestCase
     spot = Spot.new name: name
     assert_equal correct_name, spot.name
   end
+
+  test "#find_spot fixes the name and then finds it" do
+    name = "hERP dERP-zurp"
+    name_weird = "Herp Derp-Zurp"
+    spot = Spot.create(name: name)
+    assert_equal spot, Spot.find_spot(name_weird)
+  end
 end
