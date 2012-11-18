@@ -18,8 +18,9 @@ class ApiController < ApplicationController
   def pick_spot
     users = User.where(name: params['user_names'].split(","))
     spot = SpotPicker.pick(Spot.all, users)
+    last_went = spot.last_went
     spot.update_attributes! last_went: Time.now
-    render json: spot
+    render json: { name: spot.name, last_went: last_went }
   end
 
   def list_spots

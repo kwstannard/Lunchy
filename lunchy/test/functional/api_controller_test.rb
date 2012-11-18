@@ -49,11 +49,13 @@ class ApiControllerTest < ActionController::TestCase
   end
 
   test "#pick_spot successful" do
-    spot = Spot.create name: 'Double', last_went: Time.now
+    spot = Spot.create name: 'Double', last_went: Time.now - 86400
+    time = spot.last_went
     2.times {|i| User.create name: "user#{i}", favorite_spot: spot }
     user_names = User.pluck :name
     get :pick_spot, user_names: user_names
-    assert_equal @response.body, Spot.where(name: 'Double').first.to_json
+    desired_response = { name: spot.name, last_went: time }.to_json
+    assert_equal @response.body, desired_response
   end
 
   test "#set_favorite" do
